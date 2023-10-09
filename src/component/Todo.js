@@ -11,30 +11,30 @@ import { useState, useRef, useEffect } from "react"; //call useeffect when loadi
 function Todo() {
   const [todo, setTodo] = useState(""); //to access data
   const [todos, setTodos] = useState([]); //to store data
-const[editId,setEditId]=useState(0)
+  const [editId, setEditId] = useState(0);
   const handleSubmit = (e) => {
     e.preventDefault();
   };
 
   const addTodo = () => {
-    if (todo !== '') {
+    if (todo !== "") {
       setTodos([...todos, { list: todo, id: Date.now(), status: false }]); //spreading all todos that are already there,todo is new todo that we wnt to save
       console.log(todos);
 
       setTodo("");
-
     }
     if (editId) {
-      const editTodo = todos.find((todo) => todo.id == editId)
-    const updateCode=todos.map((to)=>to.id==editTodo.id
-    ?(to={id:to.id,list:todo}): (to={id:onComplete.id,list:to.list})
-      )
-      setTodos(updateCode)
+      const editTodo = todos.find((todo) => todo.id == editId);
+      const updateCode = todos.map((to) =>
+        to.id == editTodo.id
+          ? (to = { id: to.id, list: todo })
+          : (to = { id: onComplete.id, list: to.list })
+      );
+      setTodos(updateCode);
       setEditId(0);
-      setTodo('')
-  }
-  
-  }
+      setTodo("");
+    }
+  };
 
   const inputRef = useRef("null"); //initila value null
 
@@ -44,25 +44,25 @@ const[editId,setEditId]=useState(0)
   }); // we can add dependency as well [],it will show only initial loading then
 
   const onDelete = (id) => {
-  setTodos(todos.filter((to)=>to.id!==id))
-}
+    setTodos(todos.filter((to) => to.id !== id));
+  };
 
   const onComplete = (id) => {
-    let complete = todos.map((list)=> {
+    let complete = todos.map((list) => {
       if (list.id === id) {
-        return ({ ...list, status: !list.status })//initial stage here status will change to true from false
+        return { ...list, status: !list.status }; //initial stage here status will change to true from false
       }
- return list
-    })
-    setTodos(complete)
-}
+      return list;
+    });
+    setTodos(complete);
+  };
 
   const onEdit = (id) => {
-  const editTodo=todos.find((to)=>to.id===id)  //find data from todos
-    setTodo(editTodo.list)
-setEditId(editTodo.id)
-console.log(editTodo)
-  }
+    const editTodo = todos.find((to) => to.id === id); //find data from todos
+    setTodo(editTodo.list);
+    setEditId(editTodo.id);
+    console.log(editTodo);
+  };
   return (
     <div className="container">
       <h2>TODO APP</h2>
@@ -75,32 +75,35 @@ console.log(editTodo)
           className="form-control"
           onChange={(e) => setTodo(e.target.value)}
         />
-        <button onClick={addTodo}>{editId?'EDIT':'ADD' }</button>
+        <button onClick={addTodo}>{editId ? "EDIT" : "ADD"}</button>
       </form>
       <div className="list">
         <ul>
           {todos.map((to) => (
             <li className="list-items">
-              <div className={`list-items-list" ${to.status?'list-item':''}`}>{to.list}</div>
+              <div
+                className={`list-items-list" ${to.status ? "list-item" : ""}`}
+              >
+                {to.list}
+              </div>
               <span>
                 <IoMdDoneAll
                   className="list-items-icons"
                   id="complete"
                   title="complete"
-                  onClick={()=>onComplete(to.id)}
+                  onClick={() => onComplete(to.id)}
                 />
                 <MdEditNote
                   className="list-items-icons"
                   id="edit"
                   title="Edit"
-                  onClick={()=>onEdit(to.id)}
+                  onClick={() => onEdit(to.id)}
                 />
                 <RiDeleteBin2Fill
                   className="list-items-icons"
                   id="delete"
                   title="Delete"
-onClick={()=>onDelete(to.id)}
-
+                  onClick={() => onDelete(to.id)}
                 />
               </span>
             </li>
